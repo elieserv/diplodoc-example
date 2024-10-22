@@ -1,0 +1,18 @@
+﻿title: Тихозвериный бот
+items:
+  - name: Главная страница
+    href: index.md
+  - name: Как устроены истории
+    href: stories.md
+  - name: Ботий язык
+    items:
+      - name: Обзор
+        href: tzml/index.md
+      - name: Несколько слов об XML
+        href: tzml/what-is-xml.md
+      - name: Как подготовиться
+        href: tzml/prepare.md
+      - name: Как написать историю
+        href: tzml/build-basic-story.md
+      - name: Как делать реплики разных видов
+        href: tzml/points.md

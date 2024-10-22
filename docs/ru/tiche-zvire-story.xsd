@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:tz="http://tichezvire.ru" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://tichezvire.ru" elementFormDefault="qualified">
+    <xs:element name="tiche-zvire-story" type="tz:tiche-zvire-story">
+        <xs:unique name="unique-page">
+            <xs:selector xpath="tz:page"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+    </xs:element>
+    <xs:element name="title" type="xs:string"/>
+    <xs:element name="page" type="tz:page"/>
+    <xs:element name="points" type="tz:points"/>
+    <xs:element name="point" type="tz:point"/>
+    <xs:element name="image" type="xs:anyURI"/>
+    <xs:element name="video" type="xs:anyURI"/>
+    <xs:element name="original-image" type="xs:anyURI"/>
+    <xs:element name="free-input" type="tz:free-input"/>
+    <xs:element name="directions" type="tz:directions"/>
+    <xs:element name="direction" type="tz:direction"/>
+    <xs:element name="button" type="tz:non-empty-string"/>
+    <xs:element name="input" type="tz:non-empty-string"/>
+    <xs:element name="next-page" type="xs:string"/>
+    <xs:element name="end" type="tz:empty-string"/>
+    <xs:element name="text" type="tz:text"/>
+    <xs:element name="artifact" type="tz:artifact"/>
+    <xs:element name="string" type="tz:non-empty-string"/>
+    <xs:element name="accentuations" type="tz:accentuations"/>
+    <xs:element name="accentuation" type="tz:accentuation"/>
+    <xs:element name="artifacts" type="tz:artifacts"/>
+    <xs:element name="needed-artifacts" type="tz:artifacts"/>
+    <xs:element name="restricted-artifacts" type="tz:artifacts"/>
+    <xs:element name="reward" type="tz:artifacts"/>
+    <xs:element name="poll" type="tz:poll"/>
+    <xs:element name="sticker" type="tz:sticker"/>
+    <xs:element name="answers" type="tz:answers"/>
+    <xs:element name="question" type="tz:non-empty-string"/>
+    <xs:element name="correct-answer" type="tz:non-empty-string"/>
+    <xs:element name="wrong-answer" type="tz:non-empty-string"/>
+    <xs:element name="prerequisites" type="tz:prerequisites"/>
+    <xs:element name="random-text" type="tz:random-text"/>
+    <xs:element name="pause" type="tz:pause"/>
+    <xs:element name="any-other" type="tz:empty-string"/>
+    <xs:complexType name="tiche-zvire-story">
+        <xs:sequence>
+            <xs:element ref="tz:title"/>
+            <xs:element ref="tz:page" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="page">
+        <xs:sequence>
+            <xs:element ref="tz:points"/>
+            <xs:element ref="tz:free-input" minOccurs="0"/>
+            <xs:choice>
+                <xs:element ref="tz:directions"/>
+                <xs:element ref="tz:end"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="points">
+        <xs:sequence>
+            <xs:element ref="tz:point" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="point">
+        <xs:sequence>
+            <xs:element ref="tz:prerequisites" minOccurs="0"/>
+            <xs:choice>
+                <xs:sequence>
+                    <xs:element ref="tz:image"/>
+                    <xs:choice minOccurs="0">
+                        <xs:element ref="tz:text"/>
+                        <xs:element ref="tz:random-text"/>
+                    </xs:choice>
+                </xs:sequence>
+                <xs:sequence>
+                    <xs:choice>
+                        <xs:element ref="tz:text"/>
+                        <xs:element ref="tz:random-text"/>
+                    </xs:choice>
+                </xs:sequence>
+                <xs:sequence>
+                    <xs:element ref="tz:video"/>
+                </xs:sequence>
+                <xs:sequence>
+                    <xs:element ref="tz:original-image"/>
+                </xs:sequence>
+                <xs:sequence>
+                    <xs:element ref="tz:poll"/>
+                </xs:sequence>
+                <xs:sequence>
+                    <xs:element ref="tz:sticker"/>
+                </xs:sequence>
+            </xs:choice>
+            <xs:element ref="tz:reward" minOccurs="0"/>
+            <xs:element ref="tz:pause" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="free-input">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="directions">
+        <xs:sequence>
+            <xs:element ref="tz:direction" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="direction">
+        <xs:sequence>
+            <xs:choice>
+                <xs:element ref="tz:button"/>
+                <xs:element ref="tz:input"/>
+                <xs:element ref="tz:any-other"/>
+            </xs:choice>
+            <xs:element ref="tz:next-page"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="text">
+        <xs:sequence>
+            <xs:element ref="tz:string"/>
+            <xs:element ref="tz:accentuations" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="accentuations">
+        <xs:sequence>
+            <xs:element ref="tz:accentuation" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="accentuation">
+        <xs:simpleContent>
+            <xs:extension base="tz:accentuationContent">
+                <xs:attribute name="type" type="tz:accentuationType" use="required"/>
+                <xs:attribute name="offset" type="xs:int" use="required"/>
+                <xs:attribute name="length" type="xs:int" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="accentuationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="b"/>
+            <xs:enumeration value="i"/>
+            <xs:enumeration value="s"/>
+            <xs:enumeration value="u"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="accentuationContent">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="artifact">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="sticker">
+        <xs:attribute name="pack" type="xs:string" use="required"/>
+        <xs:attribute name="emoji" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="artifacts">
+        <xs:sequence>
+            <xs:element ref="tz:artifact" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="poll">
+        <xs:sequence>
+            <xs:element ref="tz:question"/>
+            <xs:element ref="tz:answers"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="answers">
+        <xs:sequence>
+            <xs:element ref="tz:correct-answer"/>
+            <xs:element ref="tz:wrong-answer" maxOccurs="9"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="prerequisites">
+        <xs:choice>
+            <xs:sequence>
+                <xs:element ref="tz:needed-artifacts"/>
+                <xs:element ref="tz:restricted-artifacts" minOccurs="0"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element ref="tz:restricted-artifacts"/>
+            </xs:sequence>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="random-text">
+        <xs:sequence>
+            <xs:element ref="tz:text" minOccurs="2" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="pause">
+        <xs:attribute name="duration" type="xs:int" use="required"/>
+    </xs:complexType>
+    <xs:simpleType name="empty-string">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="non-empty-string">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
