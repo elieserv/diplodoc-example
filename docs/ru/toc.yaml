@@ -16,3 +16,6 @@ items:
         href: tzml/build-basic-story.md
       - name: Как делать реплики разных видов
         href: tzml/points.md
+      - name: Счётчики
+        href: tzml/counters.md
+        
