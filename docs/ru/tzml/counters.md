@@ -1,4 +1,4 @@
-# Статья про счётчики
+# Как использовать счётчики
 
 **Счётчики** позволяют сохранять во время рассказа истории **числа**, а затем использовать их как условия отображения поинтов и кнопок.
 
@@ -379,7 +379,7 @@ value
             <numerical-comparator counter-id="points" comparison="greater-or-equal" value="1"/> <!-- YES -->
             <numerical-comparator counter-id="points" comparison="less-or-equal" value="10"/> <!-- YES -->
         </needed-comparators>
-        <restricted-comparators> <!-- 🟢 -->
+        <restricted-comparators> <!-- 🔴 -->
             <numerical-comparator counter-id="points" comparison="greater-or-equal" value="4"/> <!-- NO -->
             <numerical-comparator counter-id="points" comparison="less-or-equal" value="7"/> <!-- YES -->
         </resctricted-comparators>
