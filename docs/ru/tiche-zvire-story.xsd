@@ -23,13 +23,18 @@
     <xs:element name="end" type="tz:empty-string"/>
     <xs:element name="text" type="tz:text"/>
     <xs:element name="artifact" type="tz:artifact"/>
+    <xs:element name="counter" type="tz:counter"/>
     <xs:element name="string" type="tz:non-empty-string"/>
     <xs:element name="accentuations" type="tz:accentuations"/>
     <xs:element name="accentuation" type="tz:accentuation"/>
-    <xs:element name="artifacts" type="tz:artifacts"/>
     <xs:element name="needed-artifacts" type="tz:artifacts"/>
     <xs:element name="restricted-artifacts" type="tz:artifacts"/>
-    <xs:element name="reward" type="tz:artifacts"/>
+    <xs:element name="needed-comparators" type="tz:comparators"/>
+    <xs:element name="restricted-comparators" type="tz:comparators"/>
+    <xs:element name="numerical-comparator" type="tz:numerical-comparator"/>
+    <xs:element name="counter-comparator" type="tz:counter-comparator"/>
+    <xs:element name="reward" type="tz:grantables"/>
+    <xs:element name="withdrawal" type="tz:grantables"/>
     <xs:element name="poll" type="tz:poll"/>
     <xs:element name="sticker" type="tz:sticker"/>
     <xs:element name="answers" type="tz:answers"/>
@@ -93,8 +98,10 @@
                 </xs:sequence>
             </xs:choice>
             <xs:element ref="tz:reward" minOccurs="0"/>
+            <xs:element ref="tz:withdrawal" minOccurs="0"/>
             <xs:element ref="tz:pause" minOccurs="0"/>
         </xs:sequence>
+        <xs:attribute name="random-group" type="xs:string"/>
     </xs:complexType>
     <xs:simpleType name="free-input">
         <xs:restriction base="xs:string">
@@ -108,6 +115,7 @@
     </xs:complexType>
     <xs:complexType name="direction">
         <xs:sequence>
+            <xs:element ref="tz:prerequisites" minOccurs="0"/>
             <xs:choice>
                 <xs:element ref="tz:button"/>
                 <xs:element ref="tz:input"/>
@@ -121,6 +129,7 @@
             <xs:element ref="tz:string"/>
             <xs:element ref="tz:accentuations" minOccurs="0"/>
         </xs:sequence>
+        <xs:attribute name="weight" type="xs:int"/>
     </xs:complexType>
     <xs:complexType name="accentuations">
         <xs:sequence>
@@ -150,8 +159,40 @@
         </xs:restriction>
     </xs:simpleType>
     <xs:complexType name="artifact">
+        <xs:attribute name="global" type="xs:boolean"/>
         <xs:attribute name="id" type="xs:string" use="required"/>
     </xs:complexType>
+    <xs:complexType name="counter">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="operation" type="tz:operation" use="required"/>
+        <xs:attribute name="value" type="xs:int" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="numerical-comparator">
+        <xs:attribute name="counter-id" type="xs:string" use="required"/>
+        <xs:attribute name="comparison" type="tz:comparison" use="required"/>
+        <xs:attribute name="value" type="xs:int" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="counter-comparator">
+        <xs:attribute name="counter-id" type="xs:string" use="required"/>
+        <xs:attribute name="comparison" type="tz:comparison" use="required"/>
+        <xs:attribute name="value-from" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:simpleType name="operation">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="increment"/>
+            <xs:enumeration value="decrement"/>
+            <xs:enumeration value="put"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="comparison">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="greater"/>
+            <xs:enumeration value="greater-or-equal"/>
+            <xs:enumeration value="less"/>
+            <xs:enumeration value="less-or-equal"/>
+            <xs:enumeration value="equal"/>
+        </xs:restriction>
+    </xs:simpleType>
     <xs:complexType name="sticker">
         <xs:attribute name="pack" type="xs:string" use="required"/>
         <xs:attribute name="emoji" type="xs:string" use="required"/>
@@ -160,6 +201,29 @@
         <xs:sequence>
             <xs:element ref="tz:artifact" maxOccurs="unbounded"/>
         </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="comparators">
+        <xs:choice>
+            <xs:sequence>
+                <xs:element ref="tz:numerical-comparator" maxOccurs="unbounded"/>
+                <xs:element ref="tz:counter-comparator" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element ref="tz:counter-comparator" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="grantables">
+        <xs:choice>
+            <xs:sequence>
+                <xs:element ref="tz:artifact" maxOccurs="unbounded"/>
+                <xs:element ref="tz:counter" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element ref="tz:counter" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:choice>
+
     </xs:complexType>
     <xs:complexType name="poll">
         <xs:sequence>
@@ -174,15 +238,20 @@
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="prerequisites">
-        <xs:choice>
-            <xs:sequence>
+        <xs:sequence>
+            <xs:choice>
                 <xs:element ref="tz:needed-artifacts"/>
-                <xs:element ref="tz:restricted-artifacts" minOccurs="0"/>
-            </xs:sequence>
-            <xs:sequence>
                 <xs:element ref="tz:restricted-artifacts"/>
+                <xs:element ref="tz:needed-comparators"/>
+                <xs:element ref="tz:restricted-comparators"/>
+            </xs:choice>
+            <xs:sequence minOccurs="0">
+                <xs:element ref="tz:needed-artifacts" minOccurs="0"/>
+                <xs:element ref="tz:restricted-artifacts" minOccurs="0"/>
+                <xs:element ref="tz:needed-comparators" minOccurs="0"/>
+                <xs:element ref="tz:restricted-comparators" minOccurs="0"/>
             </xs:sequence>
-        </xs:choice>
+        </xs:sequence>
     </xs:complexType>
     <xs:complexType name="random-text">
         <xs:sequence>
@@ -190,7 +259,8 @@
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="pause">
-        <xs:attribute name="duration" type="xs:int" use="required"/>
+        <xs:attribute name="duration" type="xs:int"/>
+        <xs:attribute name="correction" type="xs:int"/>
     </xs:complexType>
     <xs:simpleType name="empty-string">
         <xs:restriction base="xs:string">

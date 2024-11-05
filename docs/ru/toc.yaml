@@ -18,4 +18,5 @@ items:
         href: tzml/points.md
       - name: Счётчики
         href: tzml/counters.md
-        
+      - name: Артефакты
+        href: tzml/artifacts.md
